@@ -1,108 +1,85 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  Param,
-  Patch,
   Post,
+  Patch,
+  Delete,
+  Param,
+  Body,
+  Query,
+  ParseIntPipe,
+  HttpCode,
 } from '@nestjs/common';
 
 import {
-  ApiOperation,
-  ApiResponse,
   ApiTags,
+  ApiOperation,
+  ApiBody,
 } from '@nestjs/swagger';
 
-import { CreateDestinasiDto} from './dto/create-destinasi.dto';
+import { DestinasiService } from './destinasi.service';
+import { CreateDestinasiDto } from './dto/create-destinasi.dto';
 import { UpdateDestinasiDto } from './dto/update-destinasi.dto';
 
 @ApiTags('Destinasi')
 @Controller('destinasi')
 export class DestinasiController {
+  constructor(
+    private readonly destinasiService: DestinasiService,
+  ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Menampilkan daftar destinasi wisata' })
-  @ApiResponse({
-    status: 200,
-    description: 'Daftar destinasi berhasil diambil',
+  @ApiOperation({
+    summary:
+      'Menampilkan daftar destinasi, dapat difilter berdasarkan kategori',
   })
-  findAll() {
-    return [
-      {
-        id: 1,
-        nama: 'Pantai Kuta Mandalika',
-        kategori: 'Pantai',
-        hargaTiket: 15000,
-      },
-      {
-        id: 2,
-        nama: 'Bukit Merese',
-        kategori: 'Bukit',
-        hargaTiket: 10000,
-      },
-    ];
+  findAll(@Query('kategori') kategori?: string) {
+    return this.destinasiService.findAll(kategori);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Menampilkan detail destinasi' })
-  @ApiResponse({
-    status: 200,
-    description: 'Detail destinasi berhasil diambil',
+  @ApiOperation({
+    summary: 'Menampilkan detail destinasi berdasarkan ID',
   })
-  findOne(@Param('id') id: string) {
-    return {
-      id: Number(id),
-      nama: 'Pantai Kuta Mandalika',
-      kategori: 'Pantai',
-      hargaTiket: 15000,
-    };
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.destinasiService.findOne(id);
   }
 
   @Post()
-  @ApiOperation({ summary: 'Menambahkan destinasi baru' })
-  @ApiResponse({
-    status: 201,
-    description: 'Destinasi berhasil dibuat',
+  @ApiOperation({
+    summary: 'Menambahkan destinasi baru',
   })
-  @ApiResponse({
-    status: 400,
-    description: 'Data tidak valid',
+  @ApiBody({
+    type: CreateDestinasiDto,
   })
   create(@Body() dto: CreateDestinasiDto) {
-    return {
-      message: 'Destinasi berhasil dibuat',
-      data: dto,
-    };
+    return this.destinasiService.create(dto);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Mengubah data destinasi' })
-  @ApiResponse({
-    status: 200,
-    description: 'Destinasi berhasil diperbarui',
+  @ApiOperation({
+    summary: 'Mengubah data destinasi',
+  })
+  @ApiBody({
+    type: UpdateDestinasiDto,
   })
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDestinasiDto,
   ) {
-    return {
-      message: 'Destinasi berhasil diperbarui',
-      id: Number(id),
-      data: dto,
-    };
+    return this.destinasiService.update(id, dto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Menghapus destinasi' })
-  @ApiResponse({
-    status: 200,
-    description: 'Destinasi berhasil dihapus',
+  @HttpCode(200)
+  @ApiOperation({
+    summary: 'Menghapus destinasi',
   })
-  remove(@Param('id') id: string) {
-    return {
-      message: 'Destinasi berhasil dihapus',
-      id: Number(id),
-    };
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.destinasiService.remove(id);
   }
 }

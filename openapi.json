@@ -18,13 +18,22 @@
     "/destinasi": {
       "get": {
         "operationId": "DestinasiController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "kategori",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Daftar destinasi berhasil diambil"
+            "description": ""
           }
         },
-        "summary": "Menampilkan daftar destinasi wisata",
+        "summary": "Menampilkan daftar destinasi, dapat difilter berdasarkan kategori",
         "tags": [
           "Destinasi"
         ]
@@ -44,10 +53,7 @@
         },
         "responses": {
           "201": {
-            "description": "Destinasi berhasil dibuat"
-          },
-          "400": {
-            "description": "Data tidak valid"
+            "description": ""
           }
         },
         "summary": "Menambahkan destinasi baru",
@@ -65,16 +71,16 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Detail destinasi berhasil diambil"
+            "description": ""
           }
         },
-        "summary": "Menampilkan detail destinasi",
+        "summary": "Menampilkan detail destinasi berdasarkan ID",
         "tags": [
           "Destinasi"
         ]
@@ -87,7 +93,7 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
@@ -103,7 +109,7 @@
         },
         "responses": {
           "200": {
-            "description": "Destinasi berhasil diperbarui"
+            "description": ""
           }
         },
         "summary": "Mengubah data destinasi",
@@ -119,13 +125,13 @@
             "required": true,
             "in": "path",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Destinasi berhasil dihapus"
+            "description": ""
           }
         },
         "summary": "Menghapus destinasi",
@@ -154,11 +160,50 @@
     "schemas": {
       "CreateDestinasiDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "nama": {
+            "type": "string",
+            "example": "Pantai Kuta Mandalika"
+          },
+          "kategori": {
+            "type": "string",
+            "example": "Pantai"
+          },
+          "lokasi": {
+            "type": "string",
+            "example": "Kuta, Lombok Tengah"
+          },
+          "hargaTiket": {
+            "type": "number",
+            "example": 15000
+          }
+        },
+        "required": [
+          "nama",
+          "kategori",
+          "hargaTiket"
+        ]
       },
       "UpdateDestinasiDto": {
         "type": "object",
-        "properties": {}
+        "properties": {
+          "nama": {
+            "type": "string",
+            "example": "Pantai Kuta Mandalika"
+          },
+          "kategori": {
+            "type": "string",
+            "example": "Pantai"
+          },
+          "lokasi": {
+            "type": "string",
+            "example": "Kuta, Lombok Tengah"
+          },
+          "hargaTiket": {
+            "type": "number",
+            "example": 20000
+          }
+        }
       }
     }
   }
